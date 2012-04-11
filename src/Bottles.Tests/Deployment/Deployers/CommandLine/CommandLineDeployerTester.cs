@@ -61,7 +61,7 @@ namespace Bottles.Tests.Deployment.Deployers.CommandLine
             };
         }
 
-        [Test][Explicit("powershell is not setup on the build server apparently.")]
+        [Test]
         public void should_work_for_powershell()
         {
             var packageLog = new PackageLog();
