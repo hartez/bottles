@@ -14,13 +14,13 @@ namespace Bottles.Tests.Deployment.Runtime.Content
     public class BottleMoverTester : InteractionContext<BottleMover>
     {
         private List<BottleReference> theReferences;
-        private List<PackageManifest> theManifests;
+        private List<BottleManifest> theManifests;
         private List<BottleExplosionRequest> theExplosionRequests;
 
         protected override void beforeEach()
         {
             theReferences = new List<BottleReference>();
-            theManifests = new List<PackageManifest>();
+            theManifests = new List<BottleManifest>();
             theExplosionRequests = new List<BottleExplosionRequest>();
         
         
@@ -28,21 +28,21 @@ namespace Bottles.Tests.Deployment.Runtime.Content
             addBottle("B", 1);
             addBottle("C", 4);
 
-            ClassUnderTest.Move(MockFor<IPackageLog>(), MockFor<IBottleDestination>(), theReferences);
+            ClassUnderTest.Move(MockFor<IBottleLog>(), MockFor<IBottleDestination>(), theReferences);
         }
 
         private void addBottle(string name, int numberOfExplosionRequests)
         {
             theReferences.Add(new BottleReference(name));
 
-            var manifest = new PackageManifest();
+            var manifest = new BottleManifest();
             MockFor<IBottleRepository>().Stub(x => x.ReadManifest(name)).Return(manifest);
             theManifests.Add(manifest);
 
             var list = new List<BottleExplosionRequest>();
             for (int i = 0; i < numberOfExplosionRequests; i++)
             {
-                list.Add(new BottleExplosionRequest(new PackageLog()){
+                list.Add(new BottleExplosionRequest(new BottleLog()){
                     BottleName = name,
                     DestinationDirectory = "name:" + i
                 });

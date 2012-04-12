@@ -1,71 +1,94 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
+using FubuCore.Util;
 
 namespace Bottles
 {
-    public static class BottleFiles
+    public interface IBottleFiles
     {
-        static BottleFiles()
+        void RegisterFolder(string folderName, string directory);
+        void ForFolder(string folderName, Action<string> onFound);
+        void ForData(string searchPattern, Action<string, Stream> dataCallback);
+    }
+
+    public class BottleFiles : IBottleFiles
+    {
+        private readonly Cache<string, string> _directories = new Cache<string, string>();
+
+        /// <summary>
+        ///   This a way to abstract the file system. You can add the directory
+        /// </summary>
+        /// <param name = "folderName">the name of the folder as perceived in the bottle</param>
+        /// <param name = "directory">the actual name of the directory</param>
+        public void RegisterFolder(string folderName, string directory)
         {
-            ContentFolder = "content";
-            PackagesFolder = "packages";
+            if (folderName.Contains(Path.PathSeparator))
+            {
+                throw new ArgumentException(
+                    "The path you have provided '{0}' contains a PathSeparator ('{1}') please do not register anything but root directories."
+                        .ToFormat(folderName, Path.PathSeparator));
+            }
+
+            _directories[folderName] = directory;
         }
 
-        public static readonly string Extension = "zip";
-
-        public static readonly string WebContentFolder = "WebContent";
-        public static readonly string VersionFile = ".version";
-        public static readonly string DataFolder = "Data";
-        public static readonly string ConfigFolder = "Config";
-        public static readonly string BinaryFolder = "bin";
-
-        public static string ContentFolder { get; set; }
-        public static string PackagesFolder { get; set; }
-
-
-
-        public static string FolderForPackage(string name)
+        /// <summary>
+        ///   If you register the directory 'C:\bob' as 'bobFolder' for folder will call your
+        ///   call back with 'C:\bob' if you ask for folder 'bobFolder'
+        /// </summary>
+        /// <param name = "folderName"></param>
+        /// <param name = "onFound"></param>
+        public void ForFolder(string folderName, Action<string> onFound)
         {
-            return Path.GetFileNameWithoutExtension(name);
+            _directories.WithValue(folderName, onFound);
         }
 
-        public static bool IsEmbeddedPackageZipFile(string resourceName)
+        /// <summary>
+        ///   Will call the 'dataCallback' for each file that is found matching the pattern.
+        ///   If you were to type '*.jpg' you would get all of the *.jpg in the whole bottle
+        ///   If you were to type 'images/*.jpg' you would get only the .jpg in the 'images'
+        ///   directory.
+        /// </summary>
+        /// <param name = "searchPattern">*.jpg, images/*.jpg</param>
+        /// <param name = "dataCallback">Called back with the entries name and data stream</param>
+        public void ForData(string searchPattern, Action<string, Stream> dataCallback)
         {
-            var parts = resourceName.Split('.');
+            if (!_directories.Has(CommonBottleFiles.DataFolder))
+            {
+                return;
+            }
+            
+            var dirParts = searchPattern.Split(Path.DirectorySeparatorChar);
 
-            if (parts.Length < 2) return false;
-            if (parts.Last().ToLower() != "zip") return false;
-            return parts[parts.Length - 2].ToLower().StartsWith("pak");
-        }
+            var folderPath = _directories[CommonBottleFiles.DataFolder].ToFullPath();
+            var filePattern = searchPattern;
 
-        public static string EmbeddedPackageFolderName(string resourceName)
-        {
-            var parts = resourceName.Split('.');
-            return parts[parts.Length - 2].Replace("pak-", "");
-        }
+            if (dirParts.Count() > 1)
+            {
+                var rootDir = dirParts.Take(dirParts.Length - 1).Join(Path.DirectorySeparatorChar.ToString());
+                folderPath = FileSystem.Combine(folderPath, rootDir);
 
-        public static string DirectoryForPackageZipFile(string applicationDirectory, string file)
-        {
-            var packageName = Path.GetFileNameWithoutExtension(file);
-            return GetDirectoryForExplodedPackage(applicationDirectory, packageName);
-        }
+                if (rootDir.IsNotEmpty() && !Directory.Exists(folderPath))
+                {
+                    return;
+                }
 
-        public static string GetDirectoryForExplodedPackage(string applicationDirectory, string packageName)
-        {
-            var dir = FileSystem.Combine(applicationDirectory, ContentFolder, packageName);
-            return dir;
-        }
+                filePattern = dirParts.Last();
+            }
 
-        public static string GetApplicationPackagesDirectory(string applicationDirectory)
-        {
-            var dir = FileSystem.Combine(applicationDirectory, PackagesFolder);
-            return dir;
-        }
+            if (!Directory.Exists(folderPath)) return;
 
-        public static string GetExplodedPackagesDirectory(string applicationDirectory)
-        {
-            return FileSystem.Combine(applicationDirectory, ContentFolder);
+            Directory.GetFiles(folderPath, filePattern, SearchOption.AllDirectories).Each(fileName =>
+            {
+                var name = fileName.PathRelativeTo(folderPath);
+                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                {
+                    dataCallback(name, stream);
+                }
+            });
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Bottles.Deployment.Runtime
             _settings.DeployerBottleNames().Each(name =>
             {
                 var request = new BottleExplosionRequest(){
-                    BottleDirectory = BottleFiles.BinaryFolder,
+                    BottleDirectory = CommonBottleFiles.BinaryFolder,
                     BottleName = name,
                     DestinationDirectory = destination
                 };

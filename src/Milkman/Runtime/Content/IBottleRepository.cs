@@ -9,7 +9,7 @@ namespace Bottles.Deployment.Runtime.Content
 
         void ExplodeFiles(BottleExplosionRequest request);
 
-        PackageManifest ReadManifest(string bottleName);
+        BottleManifest ReadManifest(string bottleName);
 
         void AssertAllBottlesExist(IEnumerable<string> names);
     }

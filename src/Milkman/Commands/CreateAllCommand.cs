@@ -67,7 +67,7 @@ namespace Bottles.Deployment.Commands
             });
 
 
-            var results = PackageManifest.FindManifestFilesInDirectory(input.DirectoryFlag).Select(file =>
+            var results = BottleManifest.FindManifestFilesInDirectory(input.DirectoryFlag).Select(file =>
             {
                 var folder = Path.GetDirectoryName(file);
                 return createPackage(folder, settings.BottlesDirectory, input);

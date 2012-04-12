@@ -18,7 +18,7 @@ namespace Bottles.Commands
 
     // TODO -- make this mess with the csproj files
     // TODO -- do something that tests this
-    [CommandDescription("Bundle up the content and data files for a self contained assembly package", Name = "assembly-pak")]
+    [CommandDescription("Bundle up the content and data files for a self contained assembly bottle", Name = "assembly-pak")]
     public class AssemblyPackageCommand : FubuCommand<AssemblyPackageInput>
     {
         IFileSystem fileSystem = new FileSystem();

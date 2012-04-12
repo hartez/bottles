@@ -37,11 +37,11 @@ namespace Bottles.Creation
         [Description("Choose the compilation target for any assemblies")]
         public CompileTargetEnum TargetFlag { get; set; }
 
-        [Description("Overrides the name of the manifest file (defaults to '" + PackageManifest.FILE + "'")]
+        [Description("Overrides the name of the manifest file (defaults to '" + BottleManifest.FILE + "'")]
         [FlagAlias("manifest")]
         public string ManifestFileNameFlag { get; set; }
 
-        public string GetZipFileName(PackageManifest manifest)
+        public string GetZipFileName(BottleManifest manifest)
         {
             return ZipFileFlag ?? FileSystem.Combine(BottlesDirectory, manifest.Name + ".zip");
         }

@@ -10,10 +10,10 @@ namespace Bottles.Host
     class BottleHost
     {
         private IBottleAwareService _svc;
-        private readonly IPackageExploder _exploder;
+        private readonly IBottleExploder _exploder;
         private readonly IFileSystem _fileSystem;
 
-        public BottleHost(IPackageExploder exploder, IFileSystem fileSystem)
+        public BottleHost(IBottleExploder exploder, IFileSystem fileSystem)
         {
             _exploder = exploder;
             _fileSystem = fileSystem;
@@ -29,12 +29,12 @@ namespace Bottles.Host
 
             _svc = (IBottleAwareService) Activator.CreateInstance(type);
 
-            //this is done so that start can return, as 'LoadPackages' may take some time.
+            //this is done so that start can return, as 'LoadBottles' may take some time.
             ThreadPool.QueueUserWorkItem(cb =>
             {
-                PackageRegistry.LoadPackages(pkg =>
+                BottlesRegistry.LoadBottles(pkg =>
                 {
-                    pkg.Loader(new TopshelfPackageLoader(_exploder));
+                    pkg.Loader(new TopshelfBottleLoader(_exploder));
 
                     pkg.Bootstrapper(_svc);
                 });

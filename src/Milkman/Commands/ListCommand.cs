@@ -167,7 +167,7 @@ namespace Bottles.Deployment.Commands
         {
             ConsoleWriter.Write("Looking for manifests starting from: {0}", point);
 
-            var manifests = PackageManifest.FindManifestFilesInDirectory(point);
+            var manifests = BottleManifest.FindManifestFilesInDirectory(point);
 
             foreach (var manifest in manifests)
             {

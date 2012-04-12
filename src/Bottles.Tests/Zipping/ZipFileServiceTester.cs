@@ -14,7 +14,7 @@ namespace Bottles.Tests.Zipping
         [Test]
         public void read_version_out_of_a_zip_file()
         {
-            var versionFile = Path.Combine(Path.GetTempPath(), BottleFiles.VersionFile);
+            var versionFile = Path.Combine(Path.GetTempPath(), CommonBottleFiles.VersionFile);
             var guid = Guid.NewGuid();
             new FileSystem().WriteStringToFile(versionFile, guid.ToString());
 
@@ -37,12 +37,12 @@ namespace Bottles.Tests.Zipping
         [Test]
         public void read_a_package_manifest()
         {
-            var manifest = new PackageManifest{
+            var manifest = new BottleManifest{
                 Role = "application",
                 Name = "something"
             };
 
-            new FileSystem().WriteObjectToFile(PackageManifest.FILE, manifest);
+            new FileSystem().WriteObjectToFile(BottleManifest.FILE, manifest);
 
             if (File.Exists("zip1.zip"))
             {
@@ -51,7 +51,7 @@ namespace Bottles.Tests.Zipping
 
             using (var zip1 = new ZipFile("zip1.zip"))
             {
-                zip1.AddFile(PackageManifest.FILE, "");
+                zip1.AddFile(BottleManifest.FILE, "");
                 zip1.Save();
             }
 

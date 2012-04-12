@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bottles.BottleLoaders.Assemblies;
 using Bottles.Creation;
 using Bottles.Diagnostics;
 using Bottles.Exploding;
-using Bottles.PackageLoaders.Assemblies;
 using Bottles.Tests.Zipping;
 using Bottles.Zipping;
 using FubuCore;
@@ -15,9 +15,9 @@ using Rhino.Mocks;
 namespace Bottles.Tests.Creation
 {
     [TestFixture]
-    public class when_creating_a_package_for_all_assemblies_found_and_including_pdbs : InteractionContext<PackageCreator>
+    public class when_creating_a_package_for_all_assemblies_found_and_including_pdbs : InteractionContext<BottleCreator>
     {
-        private PackageManifest theManifest;
+        private BottleManifest theManifest;
         private AssemblyFiles theAssemblyFiles;
         private CreateBottleInput theInput;
         private StubZipFileService _theZipFileService;
@@ -30,7 +30,7 @@ namespace Bottles.Tests.Creation
 			theBaseFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "folder1");
 			theBinFolder = Path.Combine(theBaseFolder, "bin");	
 			
-            theManifest = new PackageManifest
+            theManifest = new BottleManifest
             {
                 DataFileSet = new FileSet(),
                 ContentFileSet = new FileSet()
@@ -69,15 +69,15 @@ namespace Bottles.Tests.Creation
             _theZipFileService = new StubZipFileService();
             Services.Inject<IZipFileService>(_theZipFileService);
 
-            thePackageManifestFileName = FileSystem.Combine(theBaseFolder, PackageManifest.FILE);
+            thePackageManifestFileName = FileSystem.Combine(theBaseFolder, BottleManifest.FILE);
 
-            ClassUnderTest.CreatePackage(theInput, theManifest);
+            ClassUnderTest.CreateBottle(theInput, theManifest);
         }
 
         [Test]
         public void should_not_log_assemblies_missing()
         {
-            MockFor<IPackageLogger>().AssertWasNotCalled(x => x.WriteAssembliesNotFound(theAssemblyFiles, theManifest, theInput, theBinFolder));
+            MockFor<IBottleLogger>().AssertWasNotCalled(x => x.WriteAssembliesNotFound(theAssemblyFiles, theManifest, theInput, theBinFolder));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Bottles.Tests.Creation
         {
             _theZipFileService.ZipRequests.ShouldContain(new ZipFolderRequest(){
                 FileSet = theManifest.ContentFileSet,
-                ZipDirectory = BottleFiles.WebContentFolder,
+                ZipDirectory = CommonBottleFiles.WebContentFolder,
                 RootDirectory = theInput.PackageFolder
             });
         }
@@ -124,16 +124,16 @@ namespace Bottles.Tests.Creation
             _theZipFileService.ZipRequests.ShouldContain(new ZipFolderRequest()
             {
                 FileSet = theManifest.DataFileSet,
-                ZipDirectory = BottleFiles.DataFolder,
-                RootDirectory = Path.Combine(theInput.PackageFolder, BottleFiles.DataFolder)
+                ZipDirectory = CommonBottleFiles.DataFolder,
+                RootDirectory = Path.Combine(theInput.PackageFolder, CommonBottleFiles.DataFolder)
             });
         }
     }
 
     [TestFixture]
-    public class when_creating_a_package_for_all_assemblies_found_and_not_including_pdbs : InteractionContext<PackageCreator>
+    public class when_creating_a_package_for_all_assemblies_found_and_not_including_pdbs : InteractionContext<BottleCreator>
     {
-        private PackageManifest theManifest;
+        private BottleManifest theManifest;
         private AssemblyFiles theAssemblyFiles;
         private CreateBottleInput theInput;
         private StubZipFileService _theZipFileService;
@@ -146,7 +146,7 @@ namespace Bottles.Tests.Creation
 			theBaseFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "folder1");
 			theBinFolder = Path.Combine(theBaseFolder, "bin");	
 			
-            theManifest = new PackageManifest
+            theManifest = new BottleManifest
             {
                 DataFileSet = new FileSet(),
                 ContentFileSet = new FileSet()
@@ -185,7 +185,7 @@ namespace Bottles.Tests.Creation
             _theZipFileService = new StubZipFileService();
             Services.Inject<IZipFileService>(_theZipFileService);
 
-            ClassUnderTest.CreatePackage(theInput, theManifest);
+            ClassUnderTest.CreateBottle(theInput, theManifest);
         }
 
 
@@ -219,7 +219,7 @@ namespace Bottles.Tests.Creation
             throw new NotImplementedException();
         }
 
-        public PackageManifest GetPackageManifest(string fileName)
+        public BottleManifest GetPackageManifest(string fileName)
         {
             throw new NotImplementedException();
         }
@@ -254,9 +254,9 @@ namespace Bottles.Tests.Creation
     }
 
     [TestFixture]
-    public class when_trying_to_create_a_package_and_not_all_assemblies_are_found : InteractionContext<PackageCreator>
+    public class when_trying_to_create_a_package_and_not_all_assemblies_are_found : InteractionContext<BottleCreator>
     {
-        private PackageManifest theManifest;
+        private BottleManifest theManifest;
         private AssemblyFiles theAssemblyFiles;
         private CreateBottleInput theInput;
 		private string theBaseFolder;
@@ -267,7 +267,7 @@ namespace Bottles.Tests.Creation
 			theBaseFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "folder1");
 			theBinFolder = Path.Combine(theBaseFolder, "bin");	
 			
-            theManifest = new PackageManifest{
+            theManifest = new BottleManifest{
                 DataFileSet = new FileSet(),
                 ContentFileSet = new FileSet()
             };
@@ -291,13 +291,13 @@ namespace Bottles.Tests.Creation
                 .Stub(x => x.FindAssemblies(theBinFolder, theManifest.Assemblies))
                 .Return(theAssemblyFiles);
         
-            ClassUnderTest.CreatePackage(theInput, theManifest);
+            ClassUnderTest.CreateBottle(theInput, theManifest);
         }
 
         [Test]
         public void log_the_missing_assemblies()
         {
-            MockFor<IPackageLogger>().AssertWasCalled(x => x.WriteAssembliesNotFound(theAssemblyFiles, theManifest, theInput, theBinFolder));
+            MockFor<IBottleLogger>().AssertWasCalled(x => x.WriteAssembliesNotFound(theAssemblyFiles, theManifest, theInput, theBinFolder));
         }
 
         [Test]

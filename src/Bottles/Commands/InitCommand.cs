@@ -51,7 +51,7 @@ namespace Bottles.Commands
         {
             var assemblyName = fileSystem.GetFileName(input.Path);
 
-            var manifest = new PackageManifest
+            var manifest = new BottleManifest
             {
                 Name = input.Name
             };
@@ -69,15 +69,15 @@ namespace Bottles.Commands
 
 
 
-            if (input.ForceFlag || !fileSystem.FileExists(FileSystem.Combine(input.Path, PackageManifest.FILE)))
+            if (input.ForceFlag || !fileSystem.FileExists(FileSystem.Combine(input.Path, BottleManifest.FILE)))
             {
-                fileSystem.PersistToFile(manifest, input.Path, PackageManifest.FILE);
+                fileSystem.PersistToFile(manifest, input.Path, BottleManifest.FILE);
             }
 
 
             if (input.OpenFlag)
             {
-                fileSystem.LaunchEditor(input.Path, PackageManifest.FILE);
+                fileSystem.LaunchEditor(input.Path, BottleManifest.FILE);
             }
         }
     }

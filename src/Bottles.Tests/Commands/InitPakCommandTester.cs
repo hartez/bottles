@@ -44,7 +44,7 @@ namespace Bottles.Tests.Commands
         {
             execute();
 
-            fs.FileExists(thePath, PackageManifest.FILE).ShouldBeTrue();
+            fs.FileExists(thePath, BottleManifest.FILE).ShouldBeTrue();
 
             checkForAlias(pakName).ShouldEqual(thePath);
 
@@ -60,7 +60,7 @@ namespace Bottles.Tests.Commands
 
             execute();
 
-            fs.FileExists(thePath, PackageManifest.FILE).ShouldBeTrue();
+            fs.FileExists(thePath, BottleManifest.FILE).ShouldBeTrue();
 
             checkForAlias(theAlias).ShouldEqual(thePath);
         }
@@ -69,7 +69,7 @@ namespace Bottles.Tests.Commands
         public void the_pak_should_not_be_overridden_if_already_exists()
         {
             execute();
-            fs.FileExists(thePath, PackageManifest.FILE).ShouldBeTrue();
+            fs.FileExists(thePath, BottleManifest.FILE).ShouldBeTrue();
 
             var pm = fs.LoadPackageManifestFrom(thePath);
             pm.Name.ShouldEqual(pakName);
@@ -86,7 +86,7 @@ namespace Bottles.Tests.Commands
         public void the_existing_pak_should_be_overridden_if_force_flag()
         {
             execute();
-            fs.FileExists(thePath, PackageManifest.FILE).ShouldBeTrue();
+            fs.FileExists(thePath, BottleManifest.FILE).ShouldBeTrue();
 
             var pm = fs.LoadPackageManifestFrom(thePath);
             pm.Name.ShouldEqual(pakName);

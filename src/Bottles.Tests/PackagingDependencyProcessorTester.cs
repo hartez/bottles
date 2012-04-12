@@ -13,14 +13,14 @@ namespace Bottles.Tests
 {
     [TestFixture]
     public class PackagingDependencyProcessorTester : 
-        InteractionContext<PackageDependencyProcessor>
+        InteractionContext<BottleDependencyProcessor>
     {
-        IList<StubPackage> thePackages;
+        IList<StubBottle> thePackages;
         StubPackageDiagnostics theDiagnostics;
 
         protected override void beforeEach()
         {
-            thePackages = new List<StubPackage>();
+            thePackages = new List<StubBottle>();
 
             hasPackage("C");
             hasPackage("B");
@@ -39,16 +39,16 @@ namespace Bottles.Tests
         [Test]
         public void log_missing_dependency_marks_a_failure()
         {
-            var log = MockRepository.GenerateMock<IPackageLog>();
+            var log = MockRepository.GenerateMock<IBottleLog>();
             log.LogMissingDependency("A1");
 
-            log.AssertWasCalled(x => x.MarkFailure("Missing required Bottle/Package dependency named 'A1'"));
+            log.AssertWasCalled(x => x.MarkFailure("Missing required Bottle dependency named 'A1'"));
         }
 
         [Test]
         public void log_nothing_without_any_missing_dependencies()
         {
-            ClassUnderTest.LogMissingPackageDependencies(theDiagnostics);
+            ClassUnderTest.LogMissingBottleDependencies(theDiagnostics);
             theDiagnostics.HasMessages().ShouldBeFalse();
         }
 
@@ -57,7 +57,7 @@ namespace Bottles.Tests
         {
             hasPackage("A").OptionalDependency("D");
 
-            ClassUnderTest.LogMissingPackageDependencies(theDiagnostics);
+            ClassUnderTest.LogMissingBottleDependencies(theDiagnostics);
             theDiagnostics.HasMessages().ShouldBeFalse();
         }
 
@@ -69,7 +69,7 @@ namespace Bottles.Tests
             hasPackage("B").MandatoryDependency("B1");
             hasPackage("C").MandatoryDependency("B1");
 
-            ClassUnderTest.LogMissingPackageDependencies(theDiagnostics);
+            ClassUnderTest.LogMissingBottleDependencies(theDiagnostics);
 
             theDiagnostics.LogFor(hasPackage("A")).AssertWasCalled(x => x.LogMissingDependency("A1"));
             theDiagnostics.LogFor(hasPackage("A")).AssertWasCalled(x => x.LogMissingDependency("A2"));
@@ -114,22 +114,22 @@ namespace Bottles.Tests
         }
 
         //helpers
-        private StubPackage hasPackage(string name)
+        private StubBottle hasPackage(string name)
         {
-            var x = new StubPackage(name);
+            var x = new StubBottle(name);
             if(thePackages.Any(p=>p.Name.Equals(x.Name)))
             {
                 return thePackages.First(p => p.Name.Equals(name));
             }
 
             thePackages.Add(x);
-            Services.Inject<IPackageInfo>(x);
+            Services.Inject<IBottleInfo>(x);
             return x;
         }
 
         private void theOrderedPackageNamesShouldBe(params string[] names)
         {
-            var theActualOrder = ClassUnderTest.OrderedPackages().Select(x => x.Name);
+            var theActualOrder = ClassUnderTest.OrderedBottles().Select(x => x.Name);
             try
             {
                 theActualOrder
@@ -144,16 +144,16 @@ namespace Bottles.Tests
 
     }
 
-    public class StubPackageDiagnostics : IPackagingDiagnostics
+    public class StubPackageDiagnostics : IBottlingDiagnostics
     {
-        private readonly Cache<object, IPackageLog> _logs = new Cache<object, IPackageLog>(o => MockRepository.GenerateMock<IPackageLog>());
+        private readonly Cache<object, IBottleLog> _logs = new Cache<object, IBottleLog>(o => MockRepository.GenerateMock<IBottleLog>());
 
         public void LogObject(object target, string provenance)
         {
             throw new NotImplementedException();
         }
 
-        public void LogPackage(IPackageInfo package, IPackageLoader loader)
+        public void LogBottles(IBottleInfo bottle, IBottleLoader loader)
         {
             throw new NotImplementedException();
         }
@@ -163,17 +163,17 @@ namespace Bottles.Tests
             throw new NotImplementedException();
         }
 
-        public void LogAssembly(IPackageInfo package, Assembly assembly, string provenance)
+        public void LogAssembly(IBottleInfo bottle, Assembly assembly, string provenance)
         {
             throw new NotImplementedException();
         }
 
-        public void LogDuplicateAssembly(IPackageInfo package, string assemblyName)
+        public void LogDuplicateAssembly(IBottleInfo bottle, string assemblyName)
         {
             throw new NotImplementedException();
         }
 
-        public void LogAssemblyFailure(IPackageInfo package, string fileName, Exception exception)
+        public void LogAssemblyFailure(IBottleInfo bottle, string fileName, Exception exception)
         {
             throw new NotImplementedException();
         }
@@ -183,7 +183,7 @@ namespace Bottles.Tests
             throw new NotImplementedException();
         }
 
-        public IPackageLog LogFor(object target)
+        public IBottleLog LogFor(object target)
         {
             return _logs[target];
         }

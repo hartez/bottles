@@ -25,57 +25,57 @@ namespace Bottles.Tests.Deployment.Deployers
         [Test]
         public void create_request_for_binaries()
         {
-            var request = theDestination.DetermineExplosionRequests(new PackageManifest()
+            var request = theDestination.DetermineExplosionRequests(new BottleManifest()
             {
                 Role = BottleRoles.Binaries,
                 Name = "the bottle name"
             }).Single();
 
-            request.BottleDirectory.ShouldEqual(BottleFiles.BinaryFolder);
-            request.DestinationDirectory.ShouldEqual(FileSystem.Combine(theRootFolder, BottleFiles.BinaryFolder));
+            request.BottleDirectory.ShouldEqual(CommonBottleFiles.BinaryFolder);
+            request.DestinationDirectory.ShouldEqual(FileSystem.Combine(theRootFolder, CommonBottleFiles.BinaryFolder));
             request.BottleName.ShouldEqual("the bottle name");
         }
 
         [Test]
         public void create_request_for_config()
         {
-            var request = theDestination.DetermineExplosionRequests(new PackageManifest()
+            var request = theDestination.DetermineExplosionRequests(new BottleManifest()
             {
                 Role = BottleRoles.Config,
                 Name = "the bottle name"
             }).Single();
 
-            request.BottleDirectory.ShouldEqual(BottleFiles.ConfigFolder);
-            request.DestinationDirectory.ShouldEqual(FileSystem.Combine(theRootFolder, BottleFiles.ConfigFolder));
+            request.BottleDirectory.ShouldEqual(CommonBottleFiles.ConfigFolder);
+            request.DestinationDirectory.ShouldEqual(FileSystem.Combine(theRootFolder, CommonBottleFiles.ConfigFolder));
             request.BottleName.ShouldEqual("the bottle name");
         }
 
         [Test]
         public void create_request_for_module()
         {
-            var requests = theDestination.DetermineExplosionRequests(new PackageManifest()
+            var requests = theDestination.DetermineExplosionRequests(new BottleManifest()
             {
                 Role = BottleRoles.Module,
                 Name = "the bottle name"
             });
 
             var secondRequet = requests.First();
-            secondRequet.BottleDirectory.ShouldEqual(BottleFiles.BinaryFolder);
-            secondRequet.DestinationDirectory.ShouldEqual(theRootFolder.AppendPath(BottleFiles.BinaryFolder));
+            secondRequet.BottleDirectory.ShouldEqual(CommonBottleFiles.BinaryFolder);
+            secondRequet.DestinationDirectory.ShouldEqual(theRootFolder.AppendPath(CommonBottleFiles.BinaryFolder));
         }
 
         [Test]
         public void create_requests_for_module()
         {
-            var requests = theDestination.DetermineExplosionRequests(new PackageManifest()
+            var requests = theDestination.DetermineExplosionRequests(new BottleManifest()
             {
                 Role = BottleRoles.Application,
                 Name = "the bottle name"
             });
 
             var expected = new List<BottleExplosionRequest>{
-                new BottleExplosionRequest(new PackageLog()){BottleName = "the bottle name", BottleDirectory = BottleFiles.BinaryFolder, DestinationDirectory = FileSystem.Combine(theRootFolder, BottleFiles.BinaryFolder)},
-                new BottleExplosionRequest(new PackageLog()){BottleName = "the bottle name", BottleDirectory = BottleFiles.WebContentFolder, DestinationDirectory = theRootFolder},
+                new BottleExplosionRequest(new BottleLog()){BottleName = "the bottle name", BottleDirectory = CommonBottleFiles.BinaryFolder, DestinationDirectory = FileSystem.Combine(theRootFolder, CommonBottleFiles.BinaryFolder)},
+                new BottleExplosionRequest(new BottleLog()){BottleName = "the bottle name", BottleDirectory = CommonBottleFiles.WebContentFolder, DestinationDirectory = theRootFolder},
             };
 
             requests.ShouldHaveTheSameElementsAs(expected);

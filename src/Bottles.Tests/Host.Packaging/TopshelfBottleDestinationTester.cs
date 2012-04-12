@@ -13,7 +13,7 @@ namespace Bottles.Tests.Host.Packaging
         public void ModulePackage()
         {
             var dest = new TopshelfBottleDestination("bob");
-            var mani = new PackageManifest()
+            var mani = new BottleManifest()
                        {
                            Name = "hi",
                            Role = BottleRoles.Module
@@ -23,16 +23,16 @@ namespace Bottles.Tests.Host.Packaging
 
             var req = requests.Single();
 
-            req.BottleDirectory.ShouldEqual(BottleFiles.BinaryFolder);
+            req.BottleDirectory.ShouldEqual(CommonBottleFiles.BinaryFolder);
             req.BottleName = mani.Name;
-            req.DestinationDirectory = "bob".AppendPath(TopshelfPackageLoader.TopshelfPackagesFolder);
+            req.DestinationDirectory = "bob".AppendPath(TopshelfBottleLoader.TopshelfPackagesFolder);
         }
 
         [Test]
         public void BinariesPackage()
         {
             var dest = new TopshelfBottleDestination("bob");
-            var mani = new PackageManifest()
+            var mani = new BottleManifest()
             {
                 Name = "hi",
                 Role = BottleRoles.Binaries
@@ -44,14 +44,14 @@ namespace Bottles.Tests.Host.Packaging
 
             req.BottleDirectory.ShouldEqual("bin");
             req.BottleName = mani.Name;
-            req.DestinationDirectory = "bob".AppendPath(BottleFiles.PackagesFolder);
+            req.DestinationDirectory = "bob".AppendPath(CommonBottleFiles.PackagesFolder);
         }
 
         [Test]
         public void ConfigPackage()
         {
             var dest = new TopshelfBottleDestination("bob");
-            var mani = new PackageManifest()
+            var mani = new BottleManifest()
             {
                 Name = "hi",
                 Role = BottleRoles.Config
@@ -61,16 +61,16 @@ namespace Bottles.Tests.Host.Packaging
 
             var req = requests.Single();
 
-            req.BottleDirectory.ShouldEqual(BottleFiles.ConfigFolder);
+            req.BottleDirectory.ShouldEqual(CommonBottleFiles.ConfigFolder);
             req.BottleName = mani.Name;
-            req.DestinationDirectory = "bob".AppendPath(BottleFiles.ConfigFolder);
+            req.DestinationDirectory = "bob".AppendPath(CommonBottleFiles.ConfigFolder);
         }
 
         [Test]
         public void ApplicationPackage()
         {
             var dest = new TopshelfBottleDestination("bob");
-            var mani = new PackageManifest()
+            var mani = new BottleManifest()
             {
                 Name = "hi",
                 Role = BottleRoles.Application
@@ -80,9 +80,9 @@ namespace Bottles.Tests.Host.Packaging
 
             var req = requests.Single();
 
-            req.BottleDirectory.ShouldEqual(BottleFiles.BinaryFolder);
+            req.BottleDirectory.ShouldEqual(CommonBottleFiles.BinaryFolder);
             req.BottleName = mani.Name;
-            req.DestinationDirectory = "bob".AppendPath(BottleFiles.PackagesFolder);
+            req.DestinationDirectory = "bob".AppendPath(CommonBottleFiles.PackagesFolder);
         }
     }
 }

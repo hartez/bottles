@@ -25,8 +25,8 @@ namespace Bottles.Host
                     c.ConstructUsing(n =>
                     {
                         var fileSystem = new FileSystem();
-                        var packageExploder = new PackageExploder(new ZipFileService(fileSystem),
-                                                                  new PackageExploderLogger(ConsoleWriter.Write),
+                        var packageExploder = new BottleExploder(new ZipFileService(fileSystem),
+                                                                  new BottleExploderLogger(ConsoleWriter.Write),
                                                                   fileSystem);
                         return new BottleHost(packageExploder, fileSystem);
                     });

@@ -11,16 +11,16 @@ namespace Bottles.Tests
         [Test]
         public void fileset_for_searching()
         {
-            var fileSet = PackageManifest.FileSetForSearching();
+            var fileSet = BottleManifest.FileSetForSearching();
             fileSet.DeepSearch.ShouldBeTrue();
-            fileSet.Include.ShouldEqual(PackageManifest.FILE);
+            fileSet.Include.ShouldEqual(BottleManifest.FILE);
             fileSet.Exclude.ShouldBeNull();
         }
 
         [Test]
         public void set_role_to_module()
         {
-            var manifest = new PackageManifest();
+            var manifest = new BottleManifest();
             manifest.SetRole(BottleRoles.Module);
 
 
@@ -33,7 +33,7 @@ namespace Bottles.Tests
         [Test]
         public void set_role_to_config()
         {
-            var manifest = new PackageManifest();
+            var manifest = new BottleManifest();
             manifest.SetRole(BottleRoles.Config);
 
             manifest.Role.ShouldEqual(BottleRoles.Config);
@@ -52,20 +52,20 @@ namespace Bottles.Tests
         [Test]
         public void read_config_manifest_from_file()
         {
-            var manifest = new PackageManifest();
+            var manifest = new BottleManifest();
             manifest.SetRole(BottleRoles.Config);
 
             var system = new FileSystem();
             system.WriteObjectToFile("manifest.xml", manifest);
 
-            var manifest2 = system.LoadFromFile<PackageManifest>("manifest.xml");
+            var manifest2 = system.LoadFromFile<BottleManifest>("manifest.xml");
             manifest2.ContentFileSet.ShouldBeNull();
         }
 
         [Test]
         public void set_role_to_binaries()
         {
-            var manifest = new PackageManifest();
+            var manifest = new BottleManifest();
             manifest.SetRole(BottleRoles.Binaries);
 
             manifest.ContentFileSet.ShouldBeNull();
@@ -76,7 +76,7 @@ namespace Bottles.Tests
         [Test]
         public void set_role_to_data()
         {
-            var manifest = new PackageManifest();
+            var manifest = new BottleManifest();
             manifest.SetRole(BottleRoles.Data);
 
             manifest.ContentFileSet.ShouldBeNull();

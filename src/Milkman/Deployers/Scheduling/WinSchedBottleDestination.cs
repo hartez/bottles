@@ -13,7 +13,7 @@ namespace Bottles.Deployment.Deployers.Scheduling
             _physicalPath = physicalPath;
         }
 
-        public IEnumerable<BottleExplosionRequest> DetermineExplosionRequests(PackageManifest manifest)
+        public IEnumerable<BottleExplosionRequest> DetermineExplosionRequests(BottleManifest manifest)
         {
             switch (manifest.Role)
             {
@@ -22,22 +22,22 @@ namespace Bottles.Deployment.Deployers.Scheduling
                                  {
                                      BottleDirectory = SchedTaskPackageFacility.PackagesFolder,
                                      BottleName = manifest.Name,
-                                     DestinationDirectory = _physicalPath.AppendPath(BottleFiles.PackagesFolder) //is this correct
+                                     DestinationDirectory = _physicalPath.AppendPath(CommonBottleFiles.PackagesFolder) //is this correct
                                  };
                     break;
                 case BottleRoles.Config:
                     yield return new BottleExplosionRequest
                                  {
-                                     BottleDirectory = BottleFiles.ConfigFolder,
+                                     BottleDirectory = CommonBottleFiles.ConfigFolder,
                                      BottleName = manifest.Name,
-                                     DestinationDirectory = _physicalPath.AppendPath(BottleFiles.ConfigFolder)
+                                     DestinationDirectory = _physicalPath.AppendPath(CommonBottleFiles.ConfigFolder)
                                  };
                     break;
                 case BottleRoles.Binaries:
                 case BottleRoles.Application:
                     yield return new BottleExplosionRequest
                                  {
-                                     BottleDirectory = BottleFiles.BinaryFolder,
+                                     BottleDirectory = CommonBottleFiles.BinaryFolder,
                                      BottleName = manifest.Name,
                                      DestinationDirectory = _physicalPath
                                  };

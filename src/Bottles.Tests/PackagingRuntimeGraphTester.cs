@@ -8,7 +8,7 @@ using Rhino.Mocks;
 namespace Bottles.Tests
 {
     [TestFixture]
-    public class when_adding_an_bootstrapper : InteractionContext<PackagingRuntimeGraph>
+    public class when_adding_an_bootstrapper : InteractionContext<BottleRuntimeGraph>
     {
         private StubBootstrapper bootstrapper1;
         private StubBootstrapper bootstrapper2;
@@ -34,25 +34,25 @@ namespace Bottles.Tests
         [Test]
         public void should_register_the_first_bootstrapper()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(bootstrapper1, "A"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(bootstrapper1, "A"));
         }
 
         [Test]
         public void should_register_the_second_bootstrapper_with_nested_provenance()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(bootstrapper2, "B"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(bootstrapper2, "B"));
         }
 
         [Test]
         public void should_register_the_third_bootstrapper_after_popping_the_provenance()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(bootstrapper3, "A"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(bootstrapper3, "A"));
         }
     }
 
 
     [TestFixture]
-    public class when_adding_an_activator : InteractionContext<PackagingRuntimeGraph>
+    public class when_adding_an_activator : InteractionContext<BottleRuntimeGraph>
     {
         private StubActivator activator1;
         private StubActivator activator2;
@@ -78,35 +78,35 @@ namespace Bottles.Tests
         [Test]
         public void should_register_the_first_activator()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(activator1, "A"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(activator1, "A"));
         }
 
         [Test]
         public void should_register_the_second_activator_with_nested_provenance()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(activator2, "B"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(activator2, "B"));
         }
 
         [Test]
         public void should_register_the_third_activator_after_popping_the_provenance()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(activator3, "A"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(activator3, "A"));
         }
     }
 
 
     [TestFixture]
-    public class when_adding_a_package_loader : InteractionContext<PackagingRuntimeGraph>
+    public class when_adding_a_package_loader : InteractionContext<BottleRuntimeGraph>
     {
-        private StubPackageLoader loader1;
-        private StubPackageLoader loader2;
-        private StubPackageLoader loader3;
+        private StubBottleLoader loader1;
+        private StubBottleLoader loader2;
+        private StubBottleLoader loader3;
 
         protected override void beforeEach()
         {
-            loader1 = new StubPackageLoader("1a", "1b", "1c");
-            loader2 = new StubPackageLoader("2a", "2b");
-            loader3 = new StubPackageLoader("3a", "3b", "3c");
+            loader1 = new StubBottleLoader("1a", "1b", "1c");
+            loader2 = new StubBottleLoader("2a", "2b");
+            loader3 = new StubBottleLoader("3a", "3b", "3c");
         
             ClassUnderTest.PushProvenance("A");
             ClassUnderTest.AddLoader(loader1);
@@ -121,19 +121,19 @@ namespace Bottles.Tests
         [Test]
         public void should_register_the_first_loader()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(loader1, "A"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(loader1, "A"));
         }
 
         [Test]
         public void should_register_the_second_loader_with_nested_provenance()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(loader2, "B"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(loader2, "B"));
         }
 
         [Test] 
         public void should_register_the_third_loader_after_popping_the_provenance()
         {
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogObject(loader3, "A"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogObject(loader3, "A"));
         }
     }
 
@@ -149,7 +149,7 @@ namespace Bottles.Tests
             _activators = activators;
         }
 
-        public IEnumerable<IActivator> Bootstrap(IPackageLog log)
+        public IEnumerable<IActivator> Bootstrap(IBottleLog log)
         {
             return _activators;
         }
@@ -162,10 +162,10 @@ namespace Bottles.Tests
 
     public class StubActivator : IActivator
     {
-        private IEnumerable<IPackageInfo> _packages;
-        private IPackageLog _log;
+        private IEnumerable<IBottleInfo> _packages;
+        private IBottleLog _log;
 
-        public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
+        public void Activate(IEnumerable<IBottleInfo> packages, IBottleLog log)
         {
             _packages = packages;
             _log = log;
@@ -173,12 +173,12 @@ namespace Bottles.Tests
             
         }
 
-        public IEnumerable<IPackageInfo> Packages
+        public IEnumerable<IBottleInfo> Packages
         {
             get { return _packages; }
         }
 
-        public IPackageLog Log
+        public IBottleLog Log
         {
             get { return _log; }
         }

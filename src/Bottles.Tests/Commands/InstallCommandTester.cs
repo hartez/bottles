@@ -12,7 +12,7 @@ namespace Bottles.Tests.Commands
     public class InstallCommandTester : InteractionContext<InstallCommand>
     {
         private InstallInput theInput;
-        private PackageManifest theManifest;
+        private BottleManifest theManifest;
 
         protected override void beforeEach()
         {
@@ -21,20 +21,20 @@ namespace Bottles.Tests.Commands
                 AppFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "folder1")
             };
 
-            theManifest = new PackageManifest();
+            theManifest = new BottleManifest();
             Services.PartialMockTheClassUnderTest();
         }
 
 
         private void theManifestFileDoesNotExist()
         {
-            MockFor<IFileSystem>().Stub(x => FubuCore.FileSystemExtensions.FileExists(x, theInput.AppFolder, PackageManifest.FILE)).Return(false);
+            MockFor<IFileSystem>().Stub(x => FubuCore.FileSystemExtensions.FileExists(x, theInput.AppFolder, BottleManifest.FILE)).Return(false);
         }
 
         private void theManifestFileExists()
         {
-            MockFor<IFileSystem>().Stub(x => FubuCore.FileSystemExtensions.FileExists(x, theInput.AppFolder, PackageManifest.FILE)).Return(true);
-            MockFor<IFileSystem>().Stub(x => FubuCore.FileSystemExtensions.LoadFromFile<PackageManifest>(x, theInput.AppFolder, PackageManifest.FILE)).Return(theManifest);
+            MockFor<IFileSystem>().Stub(x => FubuCore.FileSystemExtensions.FileExists(x, theInput.AppFolder, BottleManifest.FILE)).Return(true);
+            MockFor<IFileSystem>().Stub(x => FubuCore.FileSystemExtensions.LoadFromFile<BottleManifest>(x, theInput.AppFolder, BottleManifest.FILE)).Return(theManifest);
         }
 
 

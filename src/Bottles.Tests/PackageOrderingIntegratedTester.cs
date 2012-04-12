@@ -8,11 +8,11 @@ namespace Bottles.Tests
     [TestFixture]
     public class PackageOrderingIntegratedTester
     {
-        private void loadPackages(Action<StubPackageLoader> configuration)
+        private void loadPackages(Action<StubBottleLoader> configuration)
         {
-            PackageRegistry.LoadPackages(facility =>
+            BottlesRegistry.LoadBottles(facility =>
             {
-                var loader = new StubPackageLoader();
+                var loader = new StubBottleLoader();
                 configuration(loader);
 
                 facility.Loader(loader);
@@ -21,7 +21,7 @@ namespace Bottles.Tests
 
         private void thePackageNamesInOrderShouldBe(params string[] names)
         {
-            PackageRegistry.Packages.Select(x => x.Name)
+            BottlesRegistry.Bottles.Select(x => x.Name)
                 .ShouldHaveTheSameElementsAs(names);
         }
 
@@ -47,7 +47,7 @@ namespace Bottles.Tests
                 x.PackageFor("A").MandatoryDependency("A1");
             });
 
-            PackageRegistry.AssertNoFailures();
+            BottlesRegistry.AssertNoFailures();
 
             thePackageNamesInOrderShouldBe("A1", "A");
         }
@@ -62,8 +62,8 @@ namespace Bottles.Tests
 
             Exception<ApplicationException>.ShouldBeThrownBy(() =>
             {
-                PackageRegistry.AssertNoFailures();
-            }).Message.ShouldContain("Missing required Bottle/Package dependency named 'B'");
+                BottlesRegistry.AssertNoFailures();
+            }).Message.ShouldContain("Missing required Bottle dependency named 'B'");
         }
     }
 }

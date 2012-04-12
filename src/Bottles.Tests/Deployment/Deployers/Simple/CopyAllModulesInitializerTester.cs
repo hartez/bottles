@@ -19,16 +19,16 @@ namespace Bottles.Tests.Deployment.Deployers.Simple
         {
             var destination = new CopyAllModulesDestination("something");
 
-            destination.DetermineExplosionRequests(new PackageManifest(){Role = BottleRoles.Application}).Any().ShouldBeFalse();
-            destination.DetermineExplosionRequests(new PackageManifest(){Role = BottleRoles.Binaries}).Any().ShouldBeFalse();
-            destination.DetermineExplosionRequests(new PackageManifest(){Role = BottleRoles.Config}).Any().ShouldBeFalse();
-            destination.DetermineExplosionRequests(new PackageManifest(){Role = BottleRoles.Data}).Any().ShouldBeFalse();
+            destination.DetermineExplosionRequests(new BottleManifest(){Role = BottleRoles.Application}).Any().ShouldBeFalse();
+            destination.DetermineExplosionRequests(new BottleManifest(){Role = BottleRoles.Binaries}).Any().ShouldBeFalse();
+            destination.DetermineExplosionRequests(new BottleManifest(){Role = BottleRoles.Config}).Any().ShouldBeFalse();
+            destination.DetermineExplosionRequests(new BottleManifest(){Role = BottleRoles.Data}).Any().ShouldBeFalse();
         }
 
         [Test]
         public void creates_a_single_explosion_request_for_a_module()
         {
-            var manifest = new PackageManifest(){
+            var manifest = new BottleManifest(){
                 Name = "the manifest",
                 Role = BottleRoles.Module
             };

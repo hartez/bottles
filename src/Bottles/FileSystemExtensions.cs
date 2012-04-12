@@ -13,23 +13,23 @@ namespace Bottles
 
         public static bool PackageManifestExists(this IFileSystem fileSystem, string directory)
         {
-            return fileSystem.FileExists(directory, PackageManifest.FILE);
+            return fileSystem.FileExists(directory, BottleManifest.FILE);
         }
 
-        public static PackageManifest LoadPackageManifestFrom(this IFileSystem fileSystem, string directory)
+        public static BottleManifest LoadPackageManifestFrom(this IFileSystem fileSystem, string directory)
         {
-            return fileSystem.TryFindManifest(directory, PackageManifest.FILE)
-                   ?? fileSystem.TryFindManifest(directory, PackageManifest.FILE);
+            return fileSystem.TryFindManifest(directory, BottleManifest.FILE)
+                   ?? fileSystem.TryFindManifest(directory, BottleManifest.FILE);
         }
 
-        public static PackageManifest TryFindManifest(this IFileSystem system, string directory, string fileName)
+        public static BottleManifest TryFindManifest(this IFileSystem system, string directory, string fileName)
         {
             if (fileName.IsEmpty()) return null;
 
             var path = FileSystem.Combine(directory, fileName);
             if (system.FileExists(path))
             {
-                var manifest = system.LoadFromFile<PackageManifest>(path);
+                var manifest = system.LoadFromFile<BottleManifest>(path);
                 manifest.ManifestFileName = path;
 
                 return manifest;

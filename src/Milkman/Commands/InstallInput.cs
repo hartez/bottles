@@ -44,7 +44,7 @@ namespace Bottles.Deployment.Commands
 
         public string ManifestFileName
         {
-            get { return Path.GetFullPath(FileSystem.Combine(AppFolder, PackageManifest.FILE)); }
+            get { return Path.GetFullPath(FileSystem.Combine(AppFolder, BottleManifest.FILE)); }
         }
 
         public string Title()

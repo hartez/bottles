@@ -13,7 +13,7 @@ namespace Bottles.Tests.Commands
     public class CreatePackageCommandTester : InteractionContext<CreateBottleCommand>
     {
         private CreateBottleInput theInput;
-        private PackageManifest theManifest;
+        private BottleManifest theManifest;
 
         protected override void beforeEach()
         {
@@ -24,7 +24,7 @@ namespace Bottles.Tests.Commands
                 ZipFileFlag = root.AppendPath("package1.zip")
             };
 
-            theManifest = new PackageManifest();
+            theManifest = new BottleManifest();
             Services.PartialMockTheClassUnderTest();
         }
 
@@ -36,9 +36,9 @@ namespace Bottles.Tests.Commands
 
         private void theManifestFileExists()
         {
-            MockFor<IFileSystem>().Stub(x => x.FileExists(theInput.PackageFolder, PackageManifest.FILE)).Return(true);
+            MockFor<IFileSystem>().Stub(x => x.FileExists(theInput.PackageFolder, BottleManifest.FILE)).Return(true);
             MockFor<IFileSystem>().Stub(x => x.PackageManifestExists(theInput.PackageFolder)).Return(true);
-            MockFor<IFileSystem>().Stub(x => x.LoadFromFile<PackageManifest>(theInput.PackageFolder, PackageManifest.FILE)).Return(theManifest);
+            MockFor<IFileSystem>().Stub(x => x.LoadFromFile<BottleManifest>(theInput.PackageFolder, BottleManifest.FILE)).Return(theManifest);
         }
 
         private void theZipFileAlreadyExists()

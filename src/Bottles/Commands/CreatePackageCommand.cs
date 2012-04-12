@@ -36,7 +36,7 @@ namespace Bottles.Commands
         [FlagAlias("file")]
         public string ManifestFileNameFlag { get; set; }
 
-        public string GetZipFileName(PackageManifest manifest)
+        public string GetZipFileName(BottleManifest manifest)
         {
             return ZipFile ?? FileSystem.Combine(BottlesDirectory, manifest.Name + ".zip");
         }

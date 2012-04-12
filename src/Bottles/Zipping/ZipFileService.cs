@@ -73,7 +73,7 @@ namespace Bottles.Zipping
             using (var zipFile = new ZipFile(fileName))
             {
 
-                var entry = zipFile.Entries.SingleOrDefault(x => x.FileName == BottleFiles.VersionFile);
+                var entry = zipFile.Entries.SingleOrDefault(x => x.FileName == CommonBottleFiles.VersionFile);
                 if (entry == null) return Guid.Empty.ToString();
 
                 var stream = new MemoryStream();
@@ -85,12 +85,12 @@ namespace Bottles.Zipping
             }
         }
 
-        public PackageManifest GetPackageManifest(string fileName)
+        public BottleManifest GetPackageManifest(string fileName)
         {
             using (var zipFile = new ZipFile(fileName))
             {
 
-                var entry = zipFile.Entries.SingleOrDefault(x => x.FileName == PackageManifest.FILE);
+                var entry = zipFile.Entries.SingleOrDefault(x => x.FileName == BottleManifest.FILE);
                 if (entry == null) return null;
 
                 var stream = new MemoryStream();
@@ -98,8 +98,8 @@ namespace Bottles.Zipping
 
                 stream.Position = 0;
 
-                var serializer = new XmlSerializer(typeof (PackageManifest));
-                return (PackageManifest) serializer.Deserialize(stream);
+                var serializer = new XmlSerializer(typeof (BottleManifest));
+                return (BottleManifest) serializer.Deserialize(stream);
             }
         }
     }

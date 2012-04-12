@@ -7,8 +7,8 @@ namespace Bottles.Tests
     [TestFixture]
     public class when_reading_a_package_from_a_folder
     {
-        private PackageManifest theOriginalManifest;
-        private IPackageInfo thePackage;
+        private BottleManifest theOriginalManifest;
+        private IBottleInfo _theBottle;
 
         [SetUp]
         public void SetUp()
@@ -21,7 +21,7 @@ namespace Bottles.Tests
             system.CreateDirectory("package1", "WebContent");
             system.CreateDirectory("package1", "Data");
 
-            theOriginalManifest = new PackageManifest(){
+            theOriginalManifest = new BottleManifest(){
                 Assemblies = new string[]{"a", "b", "c"},
                 Name = "Extraordinary"
             };
@@ -32,20 +32,20 @@ namespace Bottles.Tests
 
             theOriginalManifest.WriteTo("package1");
 
-            thePackage = new PackageManifestReader(new FileSystem(), directory => directory.AppendPath("WebContent")).LoadFromFolder("package1");
+            _theBottle = new BottleManifestReader(new FileSystem(), directory => directory.AppendPath("WebContent")).LoadFromFolder("package1");
         }
 
         [Test]
         public void has_all_the_dependencies()
         {
-            thePackage.GetDependencies()
+            _theBottle.GetDependencies()
                 .ShouldHaveTheSameElementsAs(Dependency.Mandatory("bottle1"), Dependency.Mandatory("bottle2"), Dependency.Optional("bottle3"));
         }
 
         [Test]
         public void reads_the_package_name()
         {
-            thePackage.Name.ShouldEqual(theOriginalManifest.Name);
+            _theBottle.Name.ShouldEqual(theOriginalManifest.Name);
         }
 
     }

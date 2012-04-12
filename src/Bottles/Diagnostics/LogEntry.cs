@@ -10,7 +10,7 @@ namespace Bottles.Diagnostics
         public string Description { get; set; }
         public long TimeInMilliseconds { get; set; }
 
-        public static LogEntry FromPackageLog(object target, IPackageLog log)
+        public static LogEntry FromBottleLog(object target, IBottleLog log)
         {
             return new LogEntry(){
                 Description = target.ToString(),

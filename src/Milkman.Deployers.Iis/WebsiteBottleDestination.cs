@@ -13,34 +13,34 @@ namespace Bottles.Deployers.Iis
             _physicalPath = physicalPath;            
         }
 
-        public virtual IEnumerable<BottleExplosionRequest> DetermineExplosionRequests(PackageManifest manifest)
+        public virtual IEnumerable<BottleExplosionRequest> DetermineExplosionRequests(BottleManifest manifest)
         {
             switch (manifest.Role)
             {
                 case BottleRoles.Binaries:
                     yield return new BottleExplosionRequest
                                      {
-                                         BottleDirectory = BottleFiles.BinaryFolder,
+                                         BottleDirectory = CommonBottleFiles.BinaryFolder,
                                          BottleName = manifest.Name,
-                                         DestinationDirectory = FileSystem.Combine(_physicalPath, BottleFiles.BinaryFolder)
+                                         DestinationDirectory = FileSystem.Combine(_physicalPath, CommonBottleFiles.BinaryFolder)
                                      };
                     break;
 
                 case BottleRoles.Config:
                     yield return new BottleExplosionRequest()
                                      {
-                                         BottleDirectory = BottleFiles.ConfigFolder,
+                                         BottleDirectory = CommonBottleFiles.ConfigFolder,
                                          BottleName = manifest.Name,
-                                         DestinationDirectory = FileSystem.Combine(_physicalPath, BottleFiles.ConfigFolder)
+                                         DestinationDirectory = FileSystem.Combine(_physicalPath, CommonBottleFiles.ConfigFolder)
                                      };
                     break;
 
                 case BottleRoles.Module:                    
                     yield return new BottleExplosionRequest
                                      {
-                                         BottleDirectory = BottleFiles.BinaryFolder,
+                                         BottleDirectory = CommonBottleFiles.BinaryFolder,
                                          BottleName = manifest.Name,
-                                         DestinationDirectory = _physicalPath.AppendPath(BottleFiles.BinaryFolder)
+                                         DestinationDirectory = _physicalPath.AppendPath(CommonBottleFiles.BinaryFolder)
                                      };
                     break;
 
@@ -48,14 +48,14 @@ namespace Bottles.Deployers.Iis
                     yield return new BottleExplosionRequest
                                      {
                                          BottleName = manifest.Name,
-                                         BottleDirectory = BottleFiles.BinaryFolder,
-                                         DestinationDirectory = FileSystem.Combine(_physicalPath, BottleFiles.BinaryFolder)
+                                         BottleDirectory = CommonBottleFiles.BinaryFolder,
+                                         DestinationDirectory = FileSystem.Combine(_physicalPath, CommonBottleFiles.BinaryFolder)
                                      };
 
                     yield return new BottleExplosionRequest
                                      {
                                          BottleName = manifest.Name,
-                                         BottleDirectory = BottleFiles.WebContentFolder,
+                                         BottleDirectory = CommonBottleFiles.WebContentFolder,
                                          DestinationDirectory = _physicalPath
                                      };
 

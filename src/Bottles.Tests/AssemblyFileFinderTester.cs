@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Bottles.PackageLoaders.Assemblies;
+using Bottles.BottleLoaders.Assemblies;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;

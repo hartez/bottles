@@ -78,7 +78,7 @@ namespace Bottles.Deployment.Runtime.Content
             });
         }
 
-        public PackageManifest ReadManifest(string bottleName)
+        public BottleManifest ReadManifest(string bottleName)
         {
             var fileName = _settings.BottleFileFor(bottleName);
             return _zipService.GetPackageManifest(fileName);

@@ -1,8 +1,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using AssemblyPackage;
-using Bottles.PackageLoaders.Assemblies;
+using AssemblyBottle;
+using Bottles.BottleLoaders.Assemblies;
 using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -14,26 +14,26 @@ namespace Bottles.Tests
     public class AssemblyPackageInfoTester
     {
         private Assembly assembly;
-        private AssemblyPackageInfo package;
+        private AssemblyBottleInfo bottle;
 
         [SetUp]
         public void SetUp()
         {
             assembly = Assembly.GetExecutingAssembly();
-            package = AssemblyPackageInfo.CreateFor(assembly);
+            bottle = AssemblyBottleInfo.CreateFor(assembly);
         }
 
         [Test]
         public void name_just_returns_the_assembly_name()
         {
-            package.Name.ShouldEqual("Assembly:  " + assembly.GetName().FullName);
+            bottle.Name.ShouldEqual("Assembly:  " + assembly.GetName().FullName);
         }
 
         [Test]
         public void load_assemblies_just_tries_to_add_the_inner_assembly_directly()
         {
             var loader = MockRepository.GenerateMock<IAssemblyRegistration>();
-            package.LoadAssemblies(loader);
+            bottle.LoadAssemblies(loader);
 
             loader.AssertWasCalled(x => x.Use(assembly));
         }
@@ -41,20 +41,20 @@ namespace Bottles.Tests
         [Test]
         public void get_dependencies_is_empty_FOR_NOW()
         {
-            package.GetDependencies().Any().ShouldBeFalse();
+            bottle.GetDependencies().Any().ShouldBeFalse();
         }
     }
 
     [TestFixture]
     public class AssemblyPackageInfoIntegratedTester
     {
-        private AssemblyPackageInfo thePackage;
+        private AssemblyBottleInfo _theBottle;
 
         [SetUp]
         public void SetUp()
         {
             new FileSystem().DeleteDirectory("content");
-            thePackage = AssemblyPackageInfo.CreateFor(typeof (AssemblyPackageMarker).Assembly);
+            _theBottle = AssemblyBottleInfo.CreateFor(typeof (AssemblyBottleMarker).Assembly);
         }
 
 
@@ -62,7 +62,7 @@ namespace Bottles.Tests
         public void can_retrieve_data_from_package()
         {
             var text = "not the right thing";
-            thePackage.ForData("1.txt", (name, data) =>
+            _theBottle.ForData("1.txt", (name, data) =>
             {
                 name.ShouldEqual("1.txt");
                 text = new StreamReader(data).ReadToEnd();
@@ -76,7 +76,7 @@ namespace Bottles.Tests
         public void can_retrieve_web_content_folder_from_package()
         {
             var expected = "not this";
-            thePackage.ForFolder(BottleFiles.WebContentFolder, folder =>
+            _theBottle.ForFolder(CommonBottleFiles.WebContentFolder, folder =>
             {
                 expected = folder;
             });

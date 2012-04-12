@@ -11,8 +11,8 @@ namespace Bottles.Tests.Commands
     {
         private IFileSystem theFileSystem;
         private AssembliesInput theInput;
-        private PackageManifest thePackageManifest;
-        private PackageManifest theApplicationManifest;
+        private BottleManifest theBottleManifest;
+        private BottleManifest theApplicationManifest;
 
         [SetUp]
         public void SetUp()
@@ -23,10 +23,10 @@ namespace Bottles.Tests.Commands
                 FileNameFlag = null
             };
 
-            thePackageManifest = new PackageManifest(){
+            theBottleManifest = new BottleManifest(){
                 Name = "the package"
             };
-            theApplicationManifest = new PackageManifest(){
+            theApplicationManifest = new BottleManifest(){
                 Name = "the application"
             };
         }
@@ -34,24 +34,24 @@ namespace Bottles.Tests.Commands
         private void thePackageManifestFileExists()
         {
             theFileSystem.Stub(
-                x => x.FileExists(theInput.Directory, PackageManifest.FILE))
+                x => x.FileExists(theInput.Directory, BottleManifest.FILE))
                 .Return(true);
 
             theFileSystem.Stub(
                 x =>
-                x.LoadFromFile<PackageManifest>(theInput.Directory, PackageManifest.FILE))
-                .Return(thePackageManifest);
+                x.LoadFromFile<BottleManifest>(theInput.Directory, BottleManifest.FILE))
+                .Return(theBottleManifest);
         }
 
         private void theApplicationManifestFileExists()
         {
             theFileSystem.Stub(
-                x => x.FileExists(theInput.Directory, PackageManifest.FILE))
+                x => x.FileExists(theInput.Directory, BottleManifest.FILE))
                 .Return(true);
 
             theFileSystem.Stub(
                 x =>
-                x.LoadFromFile<PackageManifest>(theInput.Directory, PackageManifest.FILE))
+                x.LoadFromFile<BottleManifest>(theInput.Directory, BottleManifest.FILE))
                 .Return(theApplicationManifest);
         }
 
@@ -61,9 +61,9 @@ namespace Bottles.Tests.Commands
             thePackageManifestFileExists();
             theInput.FindManifestAndBinaryFolders(theFileSystem);
 
-            theInput.Manifest.ShouldBeTheSameAs(thePackageManifest);
+            theInput.Manifest.ShouldBeTheSameAs(theBottleManifest);
 
-            theInput.Manifest.ManifestFileName.ShouldEqual(FileSystem.Combine(theInput.Directory, PackageManifest.FILE));
+            theInput.Manifest.ManifestFileName.ShouldEqual(FileSystem.Combine(theInput.Directory, BottleManifest.FILE));
         }
 
 
@@ -75,13 +75,13 @@ namespace Bottles.Tests.Commands
 
             theInput.Manifest.ShouldBeTheSameAs(theApplicationManifest);
 
-            theInput.Manifest.ManifestFileName.ShouldEqual(FileSystem.Combine(theInput.Directory, PackageManifest.FILE));
+            theInput.Manifest.ManifestFileName.ShouldEqual(FileSystem.Combine(theInput.Directory, BottleManifest.FILE));
         }
 
         [Test]
         public void use_the_file_name_if_it_is_given_and_the_manifest_exists_at_that_file()
         {
-            var manifest = new PackageManifest(){
+            var manifest = new BottleManifest(){
                 Name = "special"
             };
 
@@ -90,7 +90,7 @@ namespace Bottles.Tests.Commands
             theFileSystem.Stub(x => x.FileExists(theInput.Directory, theInput.FileNameFlag))
                 .Return(true);
 
-            theFileSystem.Stub(x => x.LoadFromFile<PackageManifest>(theInput.Directory, theInput.FileNameFlag))
+            theFileSystem.Stub(x => x.LoadFromFile<BottleManifest>(theInput.Directory, theInput.FileNameFlag))
                 .Return(manifest);
 
             theInput.FindManifestAndBinaryFolders(theFileSystem);

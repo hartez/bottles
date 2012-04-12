@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
+using Bottles.BottleLoaders.Assemblies;
 using Bottles.Diagnostics;
-using Bottles.PackageLoaders.Assemblies;
 using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -19,8 +19,8 @@ namespace Bottles.Tests
         [Test]
         public void uses_double_dispatch_to_let_a_package_use_itself_to_load_assemblies()
         {
-            ClassUnderTest.LoadAssembliesFromPackage(MockFor<IPackageInfo>());
-            MockFor<IPackageInfo>().AssertWasCalled(x => x.LoadAssemblies(ClassUnderTest));
+            ClassUnderTest.LoadAssembliesFromBottle(MockFor<IBottleInfo>());
+            MockFor<IBottleInfo>().AssertWasCalled(x => x.LoadAssemblies(ClassUnderTest));
         }
 
         [Test]
@@ -28,13 +28,13 @@ namespace Bottles.Tests
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            var package = new StubPackage("something"){
+            var package = new StubBottle("something"){
                 LoadingAssemblies = x => x.Use(assembly)
             };
 
-            ClassUnderTest.LoadAssembliesFromPackage(package);
+            ClassUnderTest.LoadAssembliesFromBottle(package);
 
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogAssembly(package, assembly, AssemblyLoader.DIRECTLY_REGISTERED_MESSAGE));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogAssembly(package, assembly, AssemblyLoader.DIRECTLY_REGISTERED_MESSAGE));
 
         
             ClassUnderTest.Assemblies.Contains(assembly).ShouldBeTrue();
@@ -45,20 +45,20 @@ namespace Bottles.Tests
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            var package1 = new StubPackage("something")
+            var package1 = new StubBottle("something")
             {
                 LoadingAssemblies = x => x.Use(assembly)
             };
 
-            var package2 = new StubPackage("something")
+            var package2 = new StubBottle("something")
             {
                 LoadingAssemblies = x => x.Use(assembly)
             };
 
-            ClassUnderTest.LoadAssembliesFromPackage(package1);
-            ClassUnderTest.LoadAssembliesFromPackage(package2);
+            ClassUnderTest.LoadAssembliesFromBottle(package1);
+            ClassUnderTest.LoadAssembliesFromBottle(package2);
 
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogDuplicateAssembly(package2, assembly.FullName));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogDuplicateAssembly(package2, assembly.FullName));
         }
 
         [Test]
@@ -70,16 +70,16 @@ namespace Bottles.Tests
 
             ClassUnderTest.AssemblyFileLoader = assemblyFileLoader;
 
-            var package = new StubPackage("something")
+            var package = new StubBottle("something")
             {
                 LoadingAssemblies = x => x.LoadFromFile("filename.dll", "AssemblyName")
             };
 
             assemblyFileLoader.Expect(x => x.Invoke("filename.dll")).Return(assembly);
 
-            ClassUnderTest.LoadAssembliesFromPackage(package);
+            ClassUnderTest.LoadAssembliesFromBottle(package);
 
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogAssembly(package, assembly, "Loaded from filename.dll"));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogAssembly(package, assembly, "Loaded from filename.dll"));
             assemblyFileLoader.VerifyAllExpectations();
 
             ClassUnderTest.Assemblies.Contains(assembly).ShouldBeTrue();
@@ -94,7 +94,7 @@ namespace Bottles.Tests
 
             ClassUnderTest.AssemblyFileLoader = assemblyFileLoader;
 
-            var package = new StubPackage("something")
+            var package = new StubBottle("something")
             {
                 LoadingAssemblies = x => x.LoadFromFile("filename.dll", "AssemblyName")
             };
@@ -102,9 +102,9 @@ namespace Bottles.Tests
             var theExceptionFromAssemblyLoading = new ApplicationException("You shall not pass!");
             assemblyFileLoader.Expect(x => x.Invoke("filename.dll")).Throw(theExceptionFromAssemblyLoading);
 
-            ClassUnderTest.LoadAssembliesFromPackage(package);
+            ClassUnderTest.LoadAssembliesFromBottle(package);
 
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogAssemblyFailure(package, "filename.dll", theExceptionFromAssemblyLoading));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogAssemblyFailure(package, "filename.dll", theExceptionFromAssemblyLoading));
 
         }
 
@@ -113,27 +113,27 @@ namespace Bottles.Tests
         public void load_duplicate_assembly_attempt_from_file_for_a_new_assembly()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var package1 = new StubPackage("something")
+            var package1 = new StubBottle("something")
             {
                 LoadingAssemblies = x => x.Use(assembly)
             };
-            ClassUnderTest.LoadAssembliesFromPackage(package1);
+            ClassUnderTest.LoadAssembliesFromBottle(package1);
 
             var assemblyFileLoader = MockFor<Func<string, Assembly>>();
 
             ClassUnderTest.AssemblyFileLoader = assemblyFileLoader;
 
             var theAssemblyName = assembly.GetName().Name;
-            var package = new StubPackage("something")
+            var package = new StubBottle("something")
             {
                 LoadingAssemblies = x => x.LoadFromFile("filename.dll", theAssemblyName)
             };
 
             assemblyFileLoader.Expect(x => x.Invoke("filename.dll")).Return(assembly);
 
-            ClassUnderTest.LoadAssembliesFromPackage(package);
+            ClassUnderTest.LoadAssembliesFromBottle(package);
 
-            MockFor<IPackagingDiagnostics>().AssertWasCalled(x => x.LogDuplicateAssembly(package, theAssemblyName));
+            MockFor<IBottlingDiagnostics>().AssertWasCalled(x => x.LogDuplicateAssembly(package, theAssemblyName));
 
 
             ClassUnderTest.Assemblies.Count.ShouldEqual(1);

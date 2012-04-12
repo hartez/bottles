@@ -22,7 +22,7 @@ namespace Bottles.Tests.Deployment.Runtime.Content
 
         protected override void beforeEach()
         {
-            theRequest = new BottleExplosionRequest(new PackageLog()){
+            theRequest = new BottleExplosionRequest(new BottleLog()){
                 BottleDirectory = string.Empty,
                 BottleName = "bottle1",
                 DestinationDirectory = "destination directory"
@@ -109,7 +109,7 @@ namespace Bottles.Tests.Deployment.Runtime.Content
         {
             new FileSystem().DeleteDirectory("exploded");
 
-            var packageLog = new PackageLog();
+            var packageLog = new BottleLog();
             theRepository.ExplodeFiles(new BottleExplosionRequest(packageLog){
                 BottleDirectory = "Config",
                 BottleName = "Fake",
@@ -135,7 +135,7 @@ namespace Bottles.Tests.Deployment.Runtime.Content
         {
             new FileSystem().DeleteDirectory("exploded");
 
-            var packageLog = new PackageLog();
+            var packageLog = new BottleLog();
             
             new FileSystem().WriteStringToFile("exploded".AppendPath("1.config"), "original");
             

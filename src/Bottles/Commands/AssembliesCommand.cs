@@ -41,7 +41,7 @@ namespace Bottles.Commands
         public CompileTargetEnum TargetFlag { get; set; }
 
         [IgnoreOnCommandLine]
-        public PackageManifest Manifest { get; set;}
+        public BottleManifest Manifest { get; set;}
 
         [IgnoreOnCommandLine]
         public string BinariesFolder { get; set;}
@@ -112,7 +112,7 @@ namespace Bottles.Commands
             // return false if manifest does not exist
             if (input.Manifest == null)
             {
-                throw new CommandFailureException("Could not find a PackageManifest in the directory " + input.Directory);
+                throw new CommandFailureException("Could not find a BottleManifest in the directory " + input.Directory);
             }
 
 

@@ -49,7 +49,7 @@ namespace Bottles.Tests.Deployment.Runtime
             {
                 x.ExplodeFiles(new BottleExplosionRequest()
                 {
-                    BottleDirectory = BottleFiles.BinaryFolder,
+                    BottleDirectory = CommonBottleFiles.BinaryFolder,
                     BottleName = "a",
                     DestinationDirectory = theDestination
                 });
@@ -59,7 +59,7 @@ namespace Bottles.Tests.Deployment.Runtime
             {
                 x.ExplodeFiles(new BottleExplosionRequest()
                 {
-                    BottleDirectory = BottleFiles.BinaryFolder,
+                    BottleDirectory = CommonBottleFiles.BinaryFolder,
                     BottleName = "b",
                     DestinationDirectory = theDestination
                 });
@@ -69,7 +69,7 @@ namespace Bottles.Tests.Deployment.Runtime
             {
                 x.ExplodeFiles(new BottleExplosionRequest()
                 {
-                    BottleDirectory = BottleFiles.BinaryFolder,
+                    BottleDirectory = CommonBottleFiles.BinaryFolder,
                     BottleName = "c",
                     DestinationDirectory = theDestination
                 });
