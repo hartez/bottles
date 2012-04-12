@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Milkman", "Milkman", "{73CA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "milk", "milk\milk.csproj", "{1ECE4CCD-3171-4856-89B7-22698CFC7AAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milkman.Tests", "Milkman.Tests\Milkman.Tests.csproj", "{5A896985-3725-421B-A99C-A7D6C47E49D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -264,6 +266,21 @@ Global
 		{1ECE4CCD-3171-4856-89B7-22698CFC7AAF}.Retail|Mixed Platforms.Build.0 = Release|x86
 		{1ECE4CCD-3171-4856-89B7-22698CFC7AAF}.Retail|x86.ActiveCfg = Release|x86
 		{1ECE4CCD-3171-4856-89B7-22698CFC7AAF}.Retail|x86.Build.0 = Release|x86
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Release|x86.ActiveCfg = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Retail|Any CPU.ActiveCfg = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Retail|Any CPU.Build.0 = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Retail|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Retail|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A896985-3725-421B-A99C-A7D6C47E49D6}.Retail|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -277,5 +294,6 @@ Global
 		{607F7461-947C-42D7-A4CA-379199A74E6B} = {73CA038F-0F7D-43E6-9180-B62346B465C3}
 		{665AEFFB-7582-484F-8C77-8310B1AE55F2} = {73CA038F-0F7D-43E6-9180-B62346B465C3}
 		{1ECE4CCD-3171-4856-89B7-22698CFC7AAF} = {73CA038F-0F7D-43E6-9180-B62346B465C3}
+		{5A896985-3725-421B-A99C-A7D6C47E49D6} = {73CA038F-0F7D-43E6-9180-B62346B465C3}
 	EndGlobalSection
 EndGlobal
